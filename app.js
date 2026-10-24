@@ -3,15 +3,17 @@
 (function () {
   const SVGNS = 'http://www.w3.org/2000/svg';
 
+  // Symbole: einheitliche Linien-Icons (24×24)
   const ICONS = {
-    alle: 'M4 4 H10 V10 H4 Z M14 4 H20 V10 H14 Z M4 14 H10 V20 H4 Z M14 14 H20 V20 H14 Z',
-    ski: 'M4 20 L20 4 M8 20 L20 8 M6 6 L9 9',
-    wandern: 'M13 4 a2 2 0 1 0 0.01 0 M10 21 L12 14 L15 16 L15 21 M12 14 L11 9 L15 10 L17 13 M11 9 L8 12',
-    camping: 'M3 20 L12 4 L21 20 Z M12 20 L12 13 L9 20',
-    wasser: 'M3 16 C6 14 8 18 12 16 C16 14 18 18 21 16 M5 12 L19 8',
-    rad: 'M6 17 a3.5 3.5 0 1 0 0.01 0 M18 17 a3.5 3.5 0 1 0 0.01 0 M6 17 L10 9 L15 9 L18 17 M10 9 L13 17 L15 9',
-    klettern: 'M8 3 C4 8 4 16 8 21 M16 3 C20 8 20 16 16 21 M8 12 L16 12'
+    alle: 'M5 4h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z M15 4h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z M5 14h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z M15 14h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z',
+    ski: 'M12.0 22.0L12.0 2.0 M20.7 17.0L3.3 7.0 M20.7 7.0L3.3 17.0 M14.4 3.0L12.0 5.2L9.6 3.0 M5.4 5.4L6.1 8.6L3.0 9.6 M3.0 14.4L6.1 15.4L5.4 18.6 M9.6 21.0L12.0 18.8L14.4 21.0 M18.6 18.6L17.9 15.4L21.0 14.4 M21.0 9.6L17.9 8.6L18.6 5.4',
+    wandern: 'M6 3h4.5v6.5l6.2 2.3c2 .7 3.3 2.4 3.3 4.4V18H4V4a1 1 0 0 1 1-1z M4 21h16 M10.5 6.5H7.5 M10.5 9.5H7.5 M14 12.8l-1.2 2.2',
+    camping: 'M12 5 3 19h18L12 5z M12 5l-1.6-2.2 M12 5l1.6-2.2 M12 12l-3 7 M12 12l3 7 M2 19h20',
+    wasser: 'M3 13.5c4-2 14-2 18 0-4 2-14 2-18 0z M16.5 3.5 10.8 18 M15.8 2.6l2.6 1-1 2.3-2.5-1z M2 21c1.7-1.2 3.3-1.2 5 0s3.3 1.2 5 0 3.3-1.2 5 0 3.3 1.2 5 0',
+    rad: 'M2 16a3.8 3.8 0 1 0 7.6 0a3.8 3.8 0 1 0-7.6 0z M14.4 16a3.8 3.8 0 1 0 7.6 0a3.8 3.8 0 1 0-7.6 0z M5.8 16l3.5-7h6.2l2.7 7 M9.3 9l3 7h-6.5 M15.5 9l-3.2 7 M8 6h3 M15.5 9l-.8-2.6h2.3',
+    klettern: 'M10.5 3h3.2a4.2 4.2 0 0 1 4.1 5l-1.9 9.3A4.5 4.5 0 0 1 11.5 21h-.4a4.2 4.2 0 0 1-4.1-5l1.9-9.3A4.5 4.5 0 0 1 10.5 3z M9.6 7.2l3 6.3'
   };
+
 
   const CATS = [
     { id: 'alle', label: 'Alles', words: [] },
@@ -146,12 +148,13 @@
 
     $('list').innerHTML = list.length ? list.map((i) => {
       const sub = i.mine ? esc(i.owner) + ' · noch keine Bewertungen' : esc(i.owner) + ' · ★ ' + i.rating;
-      return '<button type="button" class="item ' + kind(i) + (state.selected === i.key ? ' hl' : '') + '" data-key="' + i.key + '">' +
+      return '<div class="item-wrap">' + '<button type="button" class="item ' + kind(i) + (state.selected === i.key ? ' hl' : '') + '" data-key="' + i.key + '">' +
         (i.mine && okPhoto(i.photo) ? '<span class="thumb photo"><img src="' + i.photo + '" alt=""></span>' : '<span class="thumb">' + icon(i.cat) + '</span>') +
         '<span class="info"><span class="meta"><span class="badge">' + badge(i) + '</span><span>' + esc(townById(i.town).name) + '</span></span>' +
         '<span class="title">' + esc(i.title) + '</span>' +
         '<span class="owner">' + sub + '</span></span>' +
-        '<span class="price"><b>' + Number(i.price) + ' €</b>pro Tag</span></button>';
+        '<span class="price"><b>' + Number(i.price) + ' €</b>pro Tag</span></button>' +
+        (i.mine ? '<button type="button" class="item-del" data-del-item="' + esc(i.id) + '" aria-label="' + esc(i.title) + ' löschen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>' : '') + '</div>';
     }).join('') : '<div class="empty">Hier gibt es mit diesem Filter nichts. Probier eine andere Kategorie oder einen anderen Ort.</div>';
   }
 
@@ -269,7 +272,7 @@
     if (!i) { p.hidden = true; return; }
     p.className = 'popup ' + kind(i);
     p.innerHTML =
-      '<button type="button" class="popup-x" aria-label="Schließen">×</button>' +
+      '<button type="button" class="popup-x" aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>' +
       (i.mine && okPhoto(i.photo) ? '<img class="pop-img" src="' + i.photo + '" alt="">' : '') +
       '<span class="badge">' + badge(i) + '</span>' +
       '<h4>' + esc(i.title) + '</h4>' +
@@ -277,7 +280,10 @@
       '<p class="pop-sub">' + esc(i.owner) + ' · ' + esc(townById(i.town).name) + (i.mine ? '' : ' · ★ ' + i.rating) + '</p>' +
       (i.desc ? '<p>' + esc(i.desc) + '</p>' : '') +
       '<div class="pop-foot"><b>' + Number(i.price) + ' € <small>pro Tag</small></b>' +
-      '<button type="button" class="btn btn-accent pop-req">Anfragen</button></div>';
+      (i.mine
+        ? '<button type="button" class="btn pop-del" data-id="' + esc(i.id) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>Löschen</button>'
+        : '<button type="button" class="btn btn-accent pop-req">Anfragen</button>') +
+      '</div>';
     p.hidden = false;
     placePopup();
   }
@@ -304,9 +310,28 @@
     p.style.top = top + 'px';
   }
 
+  function closePopup() {
+    state.selected = null;
+    $('popup').hidden = true;
+    renderMapLayers();
+    renderList();
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('popup').hidden) closePopup(); });
+
   $('popup').addEventListener('click', (e) => {
-    if (e.target.closest('.popup-x')) { state.selected = null; $('popup').hidden = true; renderMapLayers(); renderList(); }
+    if (e.target.closest('.popup-x')) { closePopup(); return; }
     if (e.target.closest('.pop-req')) toast('Das ist nur ein Test – Anfragen und Buchen sind nicht möglich.');
+    const del = e.target.closest('.pop-del');
+    if (del) {
+      if (!del.classList.contains('confirm')) {
+        del.classList.add('confirm');
+        del.lastChild.textContent = 'Wirklich löschen?';
+        clearTimeout(del._t);
+        del._t = setTimeout(() => { if (del.isConnected) { del.classList.remove('confirm'); del.lastChild.textContent = 'Löschen'; } }, 3000);
+        return;
+      }
+      deleteMine(del.dataset.id);
+    }
   });
 
   // --- Ziehen und Zoomen ---
@@ -345,6 +370,7 @@
     const town = e.target.closest && e.target.closest('[data-town]');
     if (pin) selectItem(pin.dataset.key);
     else if (town) focusTown(town.dataset.town);
+    else if (!$('popup').hidden) closePopup();
   };
   svg.addEventListener('pointerup', endDrag);
   svg.addEventListener('pointercancel', () => { drag = null; svg.classList.remove('dragging'); });
@@ -368,6 +394,8 @@
 
   // --- Liste, Kategorien, Filter, Suche ---
   $('list').addEventListener('click', (e) => {
+    const d = e.target.closest('[data-del-item]');
+    if (d) { deleteMine(d.dataset.delItem); return; }
     const b = e.target.closest('[data-key]');
     if (b) selectItem(b.dataset.key, true);
   });
@@ -648,14 +676,20 @@
       return;
     }
     const b = e.target.closest('[data-del]');
-    if (!b) return;
-    mine = b.dataset.del === 'all' ? [] : mine.filter((i) => i.id !== b.dataset.del);
+    if (b) deleteMine(b.dataset.del);
+  });
+
+  function deleteMine(id) {
+    mine = id === 'all' ? [] : mine.filter((i) => i.id !== id);
     saveMine();
-    if (state.selected && state.selected.startsWith('m-') && !mine.some((i) => 'm-' + i.id === state.selected)) state.selected = null;
+    if (state.selected && state.selected.startsWith('m-') && !mine.some((i) => 'm-' + i.id === state.selected)) {
+      state.selected = null;
+      $('popup').hidden = true;
+    }
     renderMine();
     refresh();
-    toast('Testinserat gelöscht.');
-  });
+    toast(id === 'all' ? 'Alle Testinserate gelöscht.' : 'Testinserat gelöscht.');
+  }
 
   goStep(1);
   renderPreview();
