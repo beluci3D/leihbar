@@ -3,44 +3,45 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Leihbar – Leihen statt kaufen</title>
-<meta name="description" content="Ausrüstung für Ski, Wandern, Camping und Wassersport leihen – von Verleihern und Privatleuten in deiner Nähe.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Leihbar – Test-Website</title>
+<meta name="description" content="Test-Website eines Schul- und Ideenprojekts: eine Plattform zum Leihen von Freizeit- und Sportausrüstung. Kein echtes Angebot.">
+<meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="topbar">
+  <div class="testbar" role="note">
+    <div class="wrap">
+      <strong>Test-Website:</strong> Leihbar ist eine Projektidee, kein echtes Angebot. Es wird nichts verliehen, gebucht oder bezahlt. Alle Angebote sind Beispiele.
+    </div>
+  </div>
   <div class="wrap topbar-inner">
     <a href="#top" class="logo">
       <svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M3 28 L13 10 L19 20 L23 14 L31 28 Z"/><circle cx="25" cy="7" r="3" stroke="var(--accent)"/></svg>
       <span>Leihbar</span>
+      <span class="tag">Test</span>
     </a>
     <nav class="mainnav" aria-label="Hauptmenü">
       <a href="#ausleihen">Ausleihen</a>
       <a href="#karte">Karte</a>
-      <a href="#verleihen">Verleihen</a>
-      <a href="#so">So funktioniert's</a>
+      <a href="#inserieren">Inserieren</a>
+      <a href="#so">So soll es funktionieren</a>
     </nav>
-    <div class="topbar-actions">
-      <a href="#" class="btn btn-ghost">Anmelden</a>
-      <a href="#verleihen" class="btn btn-dark">Artikel verleihen</a>
-    </div>
+    <a href="#inserieren" class="btn btn-dark">Testinserat erstellen</a>
   </div>
 </header>
 
 <main>
 <section id="top" class="wrap hero">
   <div class="hero-text">
-    <span class="pill">Gewerbliche Verleiher und Privatleute an einem Ort</span>
+    <span class="pill">Projektidee · Gewerbliche Verleiher und Privatleute an einem Ort</span>
     <h1>Leihen statt kaufen. Ausrüstung für dein nächstes Abenteuer.</h1>
-    <p class="lead">Ski, Zelt, SUP oder E-Bike: Finde Angebote von Verleihern und Nachbarn in deiner Nähe oder am Urlaubsort – und buche direkt online, abgesichert.</p>
+    <p class="lead">Ski, Zelt, SUP oder E-Bike: So könnte eine Plattform aussehen, auf der man Angebote von Verleihern und Nachbarn in der Nähe findet.</p>
 
     <form class="search" id="search">
-      <label>Was?<input type="text" id="q" placeholder="z. B. Skiset, Zelt"></label>
-      <label>Wo?<input type="text" placeholder="Ort oder Skigebiet"></label>
+      <label>Was?<input type="text" id="q" placeholder="z. B. Skiset, Zelt" maxlength="60"></label>
+      <label>Wo?<input type="text" placeholder="Ort oder Skigebiet" maxlength="60"></label>
       <label>Wann?<input type="date"></label>
       <button type="submit">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20 L16 16"/></svg>
@@ -48,16 +49,12 @@
       </button>
     </form>
 
-    <ul class="trust">
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 L20 6 V12 C20 16.5 16.5 20 12 21 C7.5 20 4 16.5 4 12 V6 Z"/><path d="M8.5 12 L11 14.5 L15.5 9.5"/></svg>Schadensschutz inklusive</li>
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21 C5 16.5 8 14.5 12 14.5 C16 14.5 19 16.5 20 21"/></svg>Verifizierte Profile</li>
-      <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10 H21"/></svg>Sicher online bezahlen</li>
-    </ul>
+    <p class="planned"><b>Geplant für später:</b> Schadensschutz, verifizierte Profile und sichere Online-Bezahlung. In dieser Testversion gibt es das noch nicht.</p>
   </div>
 
-  <div class="hero-tiles">
+  <div class="hero-tiles" aria-hidden="true">
     <div class="tile tile-big">
-      <svg viewBox="0 0 200 140" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120 L50 40 L80 80 L120 20 L200 110 L200 0 L0 0 Z" fill="#3D7255"/><path d="M110 32 L120 20 L132 34 L124 30 L118 36 Z" fill="#F4F5F1"/></svg>
+      <svg viewBox="0 0 200 140" preserveAspectRatio="none"><path d="M0 120 L50 40 L80 80 L120 20 L200 110 L200 0 L0 0 Z" fill="#3D7255"/><path d="M110 32 L120 20 L132 34 L124 30 L118 36 Z" fill="#F4F5F1"/></svg>
       <span>Winter</span>
     </div>
     <div class="tile tile-water"><span>Wasser</span></div>
@@ -66,9 +63,7 @@
 </section>
 
 <section id="ausleihen" class="wrap section">
-  <div class="section-head">
-    <h2>Wonach suchst du?</h2>
-  </div>
+  <h2>Wonach suchst du?</h2>
   <div class="cats" id="cats"></div>
 </section>
 
@@ -83,7 +78,7 @@
     </div>
     <div class="results">
       <div class="list" id="list"></div>
-      <div class="map" id="map">
+      <div class="map">
         <svg class="map-bg" viewBox="0 0 600 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <path d="M0 300 C120 260 200 340 320 300 C430 262 500 330 600 300 L600 460 L0 460 Z" fill="#D2DECA"/>
           <path d="M380 0 C360 80 420 140 400 220 C385 280 430 330 470 460" stroke="#A9C7DA" stroke-width="18" fill="none"/>
@@ -93,22 +88,68 @@
           <ellipse cx="520" cy="80" rx="70" ry="44" fill="#C9D9C0"/>
         </svg>
         <div id="pins"></div>
+        <span class="map-note">Beispielkarte, keine echten Orte</span>
         <div class="legend">
           <span><i class="sw sw-biz"></i>Gewerblich</span>
           <span><i class="sw sw-priv"></i>Privat</span>
+          <span><i class="sw sw-mine"></i>Dein Test</span>
         </div>
       </div>
     </div>
-    <p class="note">Hinweis: Das ist eine Vorschau mit Beispieldaten.</p>
+    <p class="note">Alle Anbieter, Namen und Preise sind erfunden. Ähnlichkeiten mit echten Personen oder Firmen sind zufällig.</p>
+  </div>
+</section>
+
+<section id="inserieren" class="wrap section">
+  <div class="insert">
+    <div class="insert-intro">
+      <h2>Testinserat erstellen</h2>
+      <p>Probier aus, wie Verleihen funktionieren würde. Dein Inserat erscheint sofort in der Liste und auf der Karte.</p>
+      <div class="infobox">
+        <b>Wichtig:</b> Dein Testinserat wird nur in <i>deinem</i> Browser gespeichert (localStorage). Es wird nicht an uns oder andere geschickt und ist für niemand anderen sichtbar. Bitte gib keine echten persönlichen Daten wie vollen Namen, Adresse oder Telefonnummer ein.
+      </div>
+      <div id="mine"></div>
+    </div>
+
+    <form class="form" id="insertForm" novalidate>
+      <label>Was verleihst du?
+        <input name="title" type="text" required maxlength="70" placeholder="z. B. Snowboard 150 cm">
+      </label>
+      <div class="row">
+        <label>Kategorie
+          <select name="cat" id="catSelect" required></select>
+        </label>
+        <label>Preis pro Tag (€)
+          <input name="price" type="number" required min="1" max="500" step="1" placeholder="15">
+        </label>
+      </div>
+      <div class="row">
+        <label>Spitzname
+          <input name="owner" type="text" required maxlength="30" placeholder="z. B. Max">
+        </label>
+        <label>Ort (nur grob)
+          <input name="place" type="text" maxlength="40" placeholder="z. B. Innsbruck">
+        </label>
+      </div>
+      <label>Beschreibung (optional)
+        <textarea name="desc" rows="3" maxlength="300" placeholder="Zustand, Größe, Abholung …"></textarea>
+      </label>
+      <label class="check">
+        <input name="ok" type="checkbox" required>
+        <span>Ich weiß, dass das nur ein Test ist und nichts wirklich verliehen wird.</span>
+      </label>
+      <p class="form-error" id="formError" role="alert"></p>
+      <button type="submit" class="btn btn-accent">Testinserat veröffentlichen</button>
+    </form>
   </div>
 </section>
 
 <section id="so" class="wrap section">
-  <h2>So funktioniert's</h2>
+  <h2>So soll es funktionieren</h2>
   <div class="steps">
-    <div class="card"><span class="num">1</span><h3>Finden</h3><p>Suche nach Ort, Datum und Aktivität. Vergleiche Verleiher und private Angebote auf der Karte.</p></div>
-    <div class="card"><span class="num">2</span><h3>Buchen</h3><p>Zeitraum wählen, online bezahlen, Kaution hinterlegen. Schadensschutz ist inklusive.</p></div>
-    <div class="card"><span class="num">3</span><h3>Abholen und losziehen</h3><p>Übergabe mit Foto-Protokoll. Nach der Rückgabe bewertet ihr euch gegenseitig.</p></div>
+    <div class="card"><span class="num">1</span><h3>Finden</h3><p>Suche nach Ort, Datum und Aktivität. Verleiher und private Angebote auf einer Karte vergleichen.</p></div>
+    <div class="card"><span class="num">2</span><h3>Buchen</h3><p>Zeitraum wählen und online bezahlen, mit Kaution und Schadensschutz. (Geplant, in der Testversion nicht aktiv.)</p></div>
+    <div class="card"><span class="num">3</span><h3>Abholen und losziehen</h3><p>Übergabe mit Foto-Protokoll, danach bewerten sich beide gegenseitig.</p></div>
   </div>
 </section>
 
@@ -116,30 +157,32 @@
   <div class="cta cta-priv">
     <span class="eyebrow">Für Privatleute</span>
     <h2>Dein Keller verdient mit.</h2>
-    <p>Ski, die nur eine Woche im Jahr gebraucht werden? Verleih sie an Leute aus deiner Gegend – versichert und mit Auszahlung direkt aufs Konto.</p>
-    <a href="#" class="btn btn-light">Kostenlos inserieren</a>
+    <p>Ski, die nur eine Woche im Jahr gebraucht werden? Mit Leihbar könntest du sie an Leute aus deiner Gegend verleihen.</p>
+    <a href="#inserieren" class="btn btn-light">Testinserat erstellen</a>
   </div>
   <div class="cta cta-biz">
     <span class="eyebrow">Für Verleiher und Sportgeschäfte</span>
     <h2>Mehr Buchungen, weniger Leerlauf.</h2>
-    <p>Eigenes Shop-Profil, Online-Kalender und Buchungsverwaltung – ohne eigene IT.</p>
-    <a href="#" class="btn btn-light">Partner werden</a>
+    <p>Geplant: eigenes Shop-Profil, Online-Kalender und Buchungsverwaltung, ohne eigene IT. Feedback zur Idee ist willkommen.</p>
+    <a href="impressum.html" class="btn btn-light">Kontakt</a>
   </div>
 </section>
 </main>
 
 <footer class="footer">
   <div class="wrap footer-inner">
-    <span class="logo-text">Leihbar</span>
-    <span class="muted-light">Ein Projekt von Jonas &amp; Jannis</span>
+    <div>
+      <span class="logo-text">Leihbar</span>
+      <p class="muted-light">Test-Website eines privaten Ideenprojekts von Jonas &amp; Jannis. Kein Unternehmen, kein echtes Angebot.</p>
+    </div>
     <nav aria-label="Fußzeile">
-      <a href="#">Hilfe</a>
-      <a href="#">AGB</a>
-      <a href="#">Datenschutz</a>
-      <a href="#">Impressum</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
     </nav>
   </div>
 </footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="app.js"></script>
 </body>

@@ -1,3 +1,11 @@
+/* Schriften lokal eingebunden (keine Verbindung zu Google) – SIL Open Font License, siehe fonts/ */
+@font-face { font-family: 'Figtree'; font-weight: 400; font-display: swap; src: url(fonts/figtree-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Figtree'; font-weight: 500; font-display: swap; src: url(fonts/figtree-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Figtree'; font-weight: 600; font-display: swap; src: url(fonts/figtree-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Figtree'; font-weight: 700; font-display: swap; src: url(fonts/figtree-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Bricolage Grotesque'; font-weight: 600; font-display: swap; src: url(fonts/bricolage-grotesque-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Bricolage Grotesque'; font-weight: 800; font-display: swap; src: url(fonts/bricolage-grotesque-latin-800-normal.woff2) format('woff2'); }
+
 :root {
   --green: #1F3D2B;
   --green-2: #2F5A41;
@@ -39,7 +47,13 @@ p { margin: 0; }
 .logo span, .logo-text { font-family: var(--display); font-weight: 800; font-size: 26px; letter-spacing: -0.5px; }
 .mainnav { display: flex; flex-wrap: wrap; gap: 8px 26px; font-weight: 600; }
 .mainnav a { text-decoration: none; }
-.topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.testbar { background: #FFF4D6; color: #5A4300; font-size: 14px; border-bottom: 1px solid #F0DFA8; }
+.testbar .wrap { padding-top: 8px; padding-bottom: 8px; }
+.tag { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; background: #FFF4D6; color: #5A4300; border: 1px solid #E8D18A; padding: 2px 8px; border-radius: 999px; }
+.logo .tag { font-size: 12px; letter-spacing: .5px; }
+.btn-accent { background: var(--accent); color: #fff; border: none; font: inherit; font-weight: 700; cursor: pointer; justify-content: center; }
+.btn-accent:hover { background: var(--accent-dark); color: #fff; }
 
 /* Hero */
 .hero { display: flex; flex-wrap: wrap; gap: 48px; align-items: center; padding-top: 64px; padding-bottom: 56px; }
@@ -55,6 +69,7 @@ p { margin: 0; }
 .search button { flex: 0 0 auto; min-height: 56px; padding: 0 26px; border: none; border-radius: 12px; background: var(--accent); color: #fff; font: inherit; font-weight: 700; font-size: 17px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .search button:hover { background: var(--accent-dark); }
 
+.planned { font-size: 15px; color: var(--text-2); max-width: 560px; }
 .trust { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 22px; color: var(--text-2); font-weight: 500; font-size: 15px; }
 .trust li { display: flex; align-items: center; gap: 6px; }
 .trust svg { width: 18px; height: 18px; fill: none; stroke: var(--green); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
@@ -120,6 +135,39 @@ p { margin: 0; }
 .sw-priv { background: #fff; border: 3px solid var(--accent); border-radius: 999px; }
 .note { font-size: 14px; color: var(--muted); }
 
+.item { cursor: default; }
+.mine .thumb { background: #FFF4D6; color: #5A4300; }
+.mine .badge { background: #FFF4D6; color: #5A4300; border: 1px solid #E8D18A; }
+.pin.mine { background: #FFF4D6; color: #5A4300; border: 3px dashed #B08800; border-radius: 999px; }
+.sw-mine { background: #FFF4D6; border: 2px dashed #B08800; border-radius: 999px; }
+.map-note { position: absolute; right: 12px; top: 12px; background: rgba(255,255,255,.85); font-size: 12px; padding: 4px 10px; border-radius: 999px; color: var(--muted); }
+.desc { font-size: 14px; color: var(--text-2); }
+
+/* Inserieren */
+.insert { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+.insert-intro { flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+.insert-intro p { font-size: 17px; color: var(--text-2); }
+.infobox { background: #FFF4D6; border: 1px solid #F0DFA8; color: #4A3800; border-radius: 14px; padding: 16px 18px; font-size: 15px; }
+.form { flex: 1 1 460px; min-width: 0; background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 16px; }
+.form label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 15px; color: var(--green); min-width: 0; }
+.form .row label { flex: 1 1 180px; }
+.form input[type=text], .form input[type=number], .form select, .form textarea { font: inherit; font-weight: 400; font-size: 16px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; min-height: 46px; width: 100%; }
+.form textarea { resize: vertical; }
+.form input:focus, .form select:focus, .form textarea:focus { outline: 2px solid var(--green); outline-offset: 1px; }
+.form .row { display: flex; flex-wrap: wrap; gap: 16px; }
+.form .check { flex-direction: row; align-items: flex-start; gap: 10px; font-weight: 500; color: var(--ink); }
+.form .check input { width: 20px; height: 20px; margin-top: 2px; flex: 0 0 auto; accent-color: var(--green); }
+.form-error { color: #B42318; font-weight: 600; min-height: 1px; }
+.form-error:empty { display: none; }
+.form .btn { min-height: 52px; font-size: 17px; }
+.mine-list { display: flex; flex-direction: column; gap: 8px; }
+.mine-list h3 { font-size: 17px; }
+.mine-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
+.mine-row button { font: inherit; font-weight: 600; color: #B42318; background: none; border: 1px solid #F1C4BE; border-radius: 8px; min-height: 40px; padding: 0 12px; cursor: pointer; }
+.mine-row button:hover { background: #FDECEA; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 12px; font-weight: 600; opacity: 0; pointer-events: none; transition: all .2s ease; max-width: calc(100% - 32px); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
 /* Steps */
 .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
 .card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 10px; }
@@ -139,9 +187,9 @@ p { margin: 0; }
 
 /* Footer */
 .footer { background: var(--ink); color: #C9D2C6; }
-.footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 24px; padding-top: 36px; padding-bottom: 36px; }
+.footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px 24px; padding-top: 36px; padding-bottom: 36px; }
 .footer .logo-text { color: #fff; font-size: 22px; }
-.muted-light { font-size: 15px; }
+.muted-light { font-size: 15px; margin-top: 6px; max-width: 520px; }
 .footer nav { display: flex; flex-wrap: wrap; gap: 20px; }
 .footer a { color: #C9D2C6; text-decoration: none; }
 .footer a:hover { color: #fff; }
@@ -155,5 +203,17 @@ p { margin: 0; }
   .tile { min-height: 123px; }
   .map { min-height: 360px; }
   .cta { padding: 28px; }
+  .form { padding: 20px; }
+  .topbar .btn-dark { display: none; }
   .section h2 { font-size: 30px; }
 }
+
+/* Rechtliche Seiten */
+.legal { overflow-wrap: break-word; hyphens: auto; max-width: 760px; padding-top: 48px; padding-bottom: 72px; display: flex; flex-direction: column; gap: 16px; }
+.legal h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 8vw, 40px); color: var(--green); }
+.legal h2 { font-size: 20px; margin-top: 16px; color: var(--green); }
+.legal p, .legal li { color: var(--text-2); }
+.legal ul { margin: 0; padding-left: 20px; }
+.fill { background: #FFF4D6; border-radius: 4px; padding: 0 4px; }
+.linkish { align-self: flex-start; font: inherit; font-weight: 600; color: #B42318; background: none; border: none; padding: 8px 0; min-height: 40px; cursor: pointer; text-decoration: underline; }
+section[id] { scroll-margin-top: 130px; }
