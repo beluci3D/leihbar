@@ -24,7 +24,7 @@
     </a>
     <nav class="mainnav" aria-label="Hauptmenü">
       <a href="#ausleihen">Ausleihen</a>
-      <a href="#karte">Karte</a>
+      <a href="#karte">Region erkunden</a>
       <a href="#inserieren">Inserieren</a>
       <a href="#so">So soll es funktionieren</a>
     </nav>
@@ -41,7 +41,7 @@
 
     <form class="search" id="search">
       <label>Was?<input type="text" id="q" placeholder="z. B. Skiset, Zelt" maxlength="60"></label>
-      <label>Wo?<input type="text" placeholder="Ort oder Skigebiet" maxlength="60"></label>
+      <label>Wo?<input type="text" id="where" placeholder="z. B. Glitzerhorn" maxlength="60" list="townList"><datalist id="townList"></datalist></label>
       <label>Wann?<input type="date"></label>
       <button type="submit">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20 L16 16"/></svg>
@@ -71,32 +71,80 @@
   <div class="wrap section">
     <div class="section-head">
       <div>
-        <h2>Angebote in deiner Nähe</h2>
-        <p class="muted" id="resultLine"></p>
+        <h2>Region erkunden: Talbergland</h2>
+        <p class="muted">Eine erfundene Region zum Ausprobieren. Ziehe die Karte, zoome hinein und klicke auf einen Ort.</p>
       </div>
       <div class="seg" id="filters" role="group" aria-label="Anbieter filtern"></div>
     </div>
-    <div class="results">
-      <div class="list" id="list"></div>
-      <div class="map">
-        <svg class="map-bg" viewBox="0 0 600 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <path d="M0 300 C120 260 200 340 320 300 C430 262 500 330 600 300 L600 460 L0 460 Z" fill="#D2DECA"/>
-          <path d="M380 0 C360 80 420 140 400 220 C385 280 430 330 470 460" stroke="#A9C7DA" stroke-width="18" fill="none"/>
-          <path d="M0 180 L600 150" stroke="#FFFFFF" stroke-width="6"/>
-          <path d="M140 0 L190 460" stroke="#FFFFFF" stroke-width="5"/>
-          <path d="M0 380 L600 410" stroke="#FFFFFF" stroke-width="4"/>
-          <ellipse cx="520" cy="80" rx="70" ry="44" fill="#C9D9C0"/>
+
+    <div class="explore">
+      <div class="map" id="map">
+        <svg id="mapSvg" viewBox="0 0 1000 700" role="application" aria-label="Interaktive Karte der erfundenen Region Talbergland">
+          <defs>
+            <pattern id="trees" width="26" height="26" patternUnits="userSpaceOnUse">
+              <circle cx="7" cy="8" r="6" fill="#A8C29A"/><circle cx="19" cy="18" r="6" fill="#9DB98F"/>
+            </pattern>
+          </defs>
+          <rect x="-500" y="-500" width="2000" height="1700" fill="#E3EADB"/>
+          <!-- Berge im Norden -->
+          <path d="M-500 230 L60 230 L150 95 L240 40 L330 110 L400 70 L480 150 L560 90 L640 160 L760 70 L860 40 L940 110 L1500 120 L1500 -500 L-500 -500 Z" fill="#CBD3C2"/>
+          <path d="M-500 230 L60 230 L150 95 L240 40 L330 110 L400 70 L480 150 L560 90 L640 160 L760 70 L860 40 L940 110 L1500 120" fill="none" stroke="#B5BFAB" stroke-width="3"/>
+          <path d="M215 58 L240 40 L268 62 L252 58 L240 70 L228 60 Z" fill="#FFFFFF"/>
+          <path d="M835 58 L860 40 L888 62 L872 58 L860 68 L848 60 Z" fill="#FFFFFF"/>
+          <path d="M378 86 L400 70 L420 86 L408 84 L400 92 Z" fill="#FFFFFF"/>
+          <!-- Skipisten -->
+          <path d="M240 60 C230 100 215 130 230 165" stroke="#FFFFFF" stroke-width="10" fill="none" stroke-linecap="round" opacity=".9"/>
+          <path d="M252 70 C270 110 268 140 255 168" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round" opacity=".9"/>
+          <path d="M240 45 L300 160" stroke="#5B6B60" stroke-width="2" stroke-dasharray="6 5"/>
+          <!-- Felsen -->
+          <path d="M800 150 L830 105 L850 135 L875 95 L905 150 Z" fill="#B7B3A6"/>
+          <!-- Wälder -->
+          <path d="M600 210 C640 180 760 185 800 220 C830 260 800 330 740 335 C680 345 610 320 590 280 C580 250 585 225 600 210 Z" fill="url(#trees)"/>
+          <path d="M40 330 C80 300 160 310 170 350 C175 390 120 410 70 400 C30 390 20 355 40 330 Z" fill="url(#trees)"/>
+          <path d="M880 330 C920 310 990 320 1000 360 C1005 400 950 420 905 405 C870 395 860 350 880 330 Z" fill="url(#trees)"/>
+          <!-- Fluss und See -->
+          <path d="M330 110 C340 180 400 250 420 320 C440 390 520 450 580 520" stroke="#A9C7DA" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <path d="M820 600 C880 620 940 640 1100 650" stroke="#A9C7DA" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <ellipse cx="700" cy="565" rx="150" ry="72" fill="#A9C7DA"/>
+          <text x="700" y="572" class="water-label">Spiegelsee</text>
+          <!-- Straßen -->
+          <g stroke="#FFFFFF" stroke-width="6" fill="none" stroke-linecap="round">
+            <path d="M250 195 C300 260 380 320 430 365"/>
+            <path d="M430 365 C520 330 620 300 700 280"/>
+            <path d="M700 280 C760 230 820 190 850 160"/>
+            <path d="M430 365 C470 430 520 480 560 505"/>
+            <path d="M430 365 C350 420 260 490 190 540"/>
+            <path d="M190 540 C300 600 450 620 560 505"/>
+          </g>
+          <g id="layerItems"></g>
+          <g id="layerTowns"></g>
         </svg>
-        <div id="pins"></div>
-        <span class="map-note">Beispielkarte, keine echten Orte</span>
+        <span class="map-note">Erfundene Region · keine echten Orte</span>
+        <div class="map-ctrl">
+          <button type="button" id="zoomIn" aria-label="Hineinzoomen">+</button>
+          <button type="button" id="zoomOut" aria-label="Herauszoomen">−</button>
+          <button type="button" id="zoomAll" class="wide">Ganze Region</button>
+        </div>
         <div class="legend">
           <span><i class="sw sw-biz"></i>Gewerblich</span>
           <span><i class="sw sw-priv"></i>Privat</span>
           <span><i class="sw sw-mine"></i>Dein Test</span>
         </div>
+        <div class="popup" id="popup" hidden></div>
       </div>
+
+      <aside class="panel" aria-label="Angebote">
+        <div class="panel-head">
+          <div>
+            <h3 id="panelTitle">Ganze Region</h3>
+            <p class="muted small" id="resultLine"></p>
+          </div>
+          <button type="button" class="chip-x" id="clearTown" hidden>Alle Orte</button>
+        </div>
+        <div class="list" id="list"></div>
+      </aside>
     </div>
-    <p class="note">Alle Anbieter, Namen und Preise sind erfunden. Ähnlichkeiten mit echten Personen oder Firmen sind zufällig.</p>
+    <p class="note">Alle Orte, Anbieter, Namen und Preise sind erfunden. Ähnlichkeiten mit echten Orten, Personen oder Firmen sind zufällig.</p>
   </div>
 </section>
 
@@ -127,8 +175,8 @@
         <label>Spitzname
           <input name="owner" type="text" required maxlength="30" placeholder="z. B. Max">
         </label>
-        <label>Ort (nur grob)
-          <input name="place" type="text" maxlength="40" placeholder="z. B. Innsbruck">
+        <label>Ort in Talbergland
+          <select name="town" id="townSelect" required></select>
         </label>
       </div>
       <label>Beschreibung (optional)

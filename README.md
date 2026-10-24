@@ -6,15 +6,16 @@ Die Idee: eine Plattform, auf der man Freizeit- und Sportausrüstung ausleihen k
 
 ## Was man ausprobieren kann
 
+- **Region erkunden:** In der erfundenen Region „Talbergland“ die Karte ziehen und zoomen, auf Orte wie Glitzerhorn oder Spiegelsee klicken und sehen, was dort verliehen wird
 - Kategorien wählen und nach gewerblichen oder privaten Anbietern filtern
-- Angebote in der Liste und auf einer Beispielkarte ansehen
+- Angebote auf der Karte oder in der Liste anklicken und Details ansehen
 - **Testinserat erstellen:** Das Inserat erscheint sofort in Liste und Karte und kann wieder gelöscht werden.
 
 ## Datenschutz und Rechtliches
 
 - Testinserate werden **nur im localStorage des eigenen Browsers** gespeichert und nirgendwohin gesendet.
 - Keine Cookies, kein Tracking, keine externen Dienste. Die Schriften sind lokal eingebunden (SIL Open Font License, siehe `fonts/`).
-- Alle Anbieter, Namen und Preise sind erfunden.
+- Die Region, alle Orte, Anbieter, Namen und Preise sind erfunden.
 - Die Seite ist für Suchmaschinen gesperrt (`noindex`).
 - `impressum.html` und `datenschutz.html` sind vorhanden. **Die Platzhalter im Impressum müssen noch ausgefüllt werden.**
 
