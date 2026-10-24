@@ -147,7 +147,7 @@
     $('list').innerHTML = list.length ? list.map((i) => {
       const sub = i.mine ? esc(i.owner) + ' · noch keine Bewertungen' : esc(i.owner) + ' · ★ ' + i.rating;
       return '<button type="button" class="item ' + kind(i) + (state.selected === i.key ? ' hl' : '') + '" data-key="' + i.key + '">' +
-        '<span class="thumb">' + icon(i.cat) + '</span>' +
+        (i.mine && okPhoto(i.photo) ? '<span class="thumb photo"><img src="' + i.photo + '" alt=""></span>' : '<span class="thumb">' + icon(i.cat) + '</span>') +
         '<span class="info"><span class="meta"><span class="badge">' + badge(i) + '</span><span>' + esc(townById(i.town).name) + '</span></span>' +
         '<span class="title">' + esc(i.title) + '</span>' +
         '<span class="owner">' + sub + '</span></span>' +
@@ -158,7 +158,7 @@
   // --- Karte ---
   const svg = $('mapSvg');
   const zoomed = () => state.view.w <= 560;
-  const k = () => state.view.w / $('map').clientWidth; // Kartenpixel pro Bildschirmpixel
+  const k = () => state.view.w / ($('map').clientWidth || 800); // Kartenpixel pro Bildschirmpixel
 
   function setView(v, animate) {
     const w = Math.min(FULL.w, Math.max(260, v.w));
@@ -270,8 +270,10 @@
     p.className = 'popup ' + kind(i);
     p.innerHTML =
       '<button type="button" class="popup-x" aria-label="Schließen">×</button>' +
+      (i.mine && okPhoto(i.photo) ? '<img class="pop-img" src="' + i.photo + '" alt="">' : '') +
       '<span class="badge">' + badge(i) + '</span>' +
       '<h4>' + esc(i.title) + '</h4>' +
+      (i.mine && i.cond ? '<p class="pop-sub">Zustand: ' + esc(i.cond) + (i.deposit ? ' · Kaution ' + Number(i.deposit) + ' €' : '') + '</p>' : '') +
       '<p class="pop-sub">' + esc(i.owner) + ' · ' + esc(townById(i.town).name) + (i.mine ? '' : ' · ★ ' + i.rating) + '</p>' +
       (i.desc ? '<p>' + esc(i.desc) + '</p>' : '') +
       '<div class="pop-foot"><b>' + Number(i.price) + ' € <small>pro Tag</small></b>' +
@@ -417,70 +419,246 @@
     toast.timer = setTimeout(() => t.classList.remove('show'), 3400);
   }
 
-  // --- Testinserat ---
-  $('catSelect').innerHTML = CATS.filter((c) => c.id !== 'alle').map((c) => '<option value="' + c.id + '">' + esc(c.label) + '</option>').join('');
-  $('townSelect').innerHTML = TOWNS.map((t) => '<option value="' + t.id + '">' + esc(t.name) + '</option>').join('');
+  // --- Testinserat (Assistent in 3 Schritten) ---
+  const CONDS = ['Wie neu', 'Sehr gut', 'Gut', 'Gebraucht'];
+  const CAT_TINT = { ski: ['#DCE7F0', '#2D5470'], wandern: ['#E4EBDF', '#1F3D2B'], camping: ['#F2E3D0', '#7A4B14'], wasser: ['#D6E8EE', '#1D5566'], rad: ['#EDE3F0', '#5B3A6B'], klettern: ['#ECE7DC', '#5C4B2E'] };
+  const draft = { step: 1, cat: 'ski', cond: 'Sehr gut', town: 'glitzerhorn', photo: '' };
+  const form = $('insertForm');
+  let lastPublished = null;
+
+  function radioTiles(name, items, selected, html) {
+    return items.map((it) =>
+      '<label class="tile-opt"><input type="radio" class="sr-only" name="' + name + '" value="' + esc(it.value) + '"' + (it.value === selected ? ' checked' : '') + '>' +
+      '<span>' + html(it) + '</span></label>'
+    ).join('');
+  }
+
+  $('catPick').innerHTML = radioTiles('cat', CATS.filter((c) => c.id !== 'alle').map((c) => ({ value: c.id, c })), draft.cat,
+    (it) => icon(it.c.id) + '<b>' + esc(it.c.label) + '</b>');
+  $('condPick').innerHTML = radioTiles('cond', CONDS.map((c) => ({ value: c })), draft.cond, (it) => esc(it.value));
+  $('townPick').innerHTML = radioTiles('town', TOWNS.map((t) => ({ value: t.id, t })), draft.town,
+    (it) => '<b>' + esc(it.t.name) + '</b><small>' + esc(it.t.info) + '</small>');
+
+  function readDraft() {
+    draft.title = form.title.value.trim();
+    draft.cat = (form.querySelector('[name=cat]:checked') || {}).value || draft.cat;
+    draft.cond = (form.querySelector('[name=cond]:checked') || {}).value || draft.cond;
+    draft.town = (form.querySelector('[name=town]:checked') || {}).value || draft.town;
+    draft.price = Math.round(Number(form.price.value)) || 0;
+    draft.deposit = Math.max(0, Math.round(Number(form.deposit.value)) || 0);
+    draft.desc = form.desc.value.trim();
+    draft.owner = form.owner.value.trim();
+  }
+
+  const okPhoto = (p) => typeof p === 'string' && /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(p);
+
+  function photoBlock(i, cls) {
+    const tint = CAT_TINT[i.cat] || CAT_TINT.ski;
+    if (okPhoto(i.photo)) return '<div class="' + cls + '"><img src="' + i.photo + '" alt=""></div>';
+    return '<div class="' + cls + ' ph" style="background:' + tint[0] + ';color:' + tint[1] + '">' + icon(i.cat) + '</div>';
+  }
+
+  function renderPreview() {
+    readDraft();
+    const t = townById(draft.town);
+    const title = draft.title || 'Dein Titel erscheint hier';
+    $('preview').innerHTML =
+      '<article class="pcard' + (draft.title ? '' : ' is-empty') + '">' +
+        photoBlock(draft, 'pcard-img') +
+        '<div class="pcard-body">' +
+          '<div class="pcard-tags"><span class="badge b-mine">Dein Testinserat</span><span class="ptag">' + esc(catLabel(draft.cat)) + '</span><span class="ptag">' + esc(draft.cond) + '</span></div>' +
+          '<h3>' + esc(title) + '</h3>' +
+          '<p class="pcard-where"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21 C12 21 5 14.5 5 9.5 a7 7 0 0 1 14 0 C19 14.5 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>' + esc(t.name) + ', Talbergland</p>' +
+          (draft.desc ? '<p class="pcard-desc">' + esc(draft.desc) + '</p>' : '') +
+          '<div class="pcard-foot">' +
+            '<div class="pcard-owner"><span class="avatar">' + esc((draft.owner || '?').charAt(0).toUpperCase()) + '</span><span>' + esc(draft.owner || 'Dein Spitzname') + '<small>Neu auf Leihbar</small></span></div>' +
+            '<div class="pcard-price"><b>' + (draft.price > 0 ? draft.price : '–') + ' €</b><small>pro Tag' + (draft.deposit ? ' · ' + draft.deposit + ' € Kaution' : '') + '</small></div>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
+    $('titleCount').textContent = form.title.value.length + '/60';
+    $('descCount').textContent = form.desc.value.length + '/300';
+    const prices = SAMPLES.filter((s) => s.cat === draft.cat).map((s) => s.price);
+    $('priceHint').textContent = prices.length ? 'Ähnliche Angebote: ' + Math.min.apply(null, prices) + '–' + Math.max.apply(null, prices) + ' € pro Tag' : '';
+  }
+
+  function validate(step) {
+    readDraft();
+    if (step === 1 && draft.title.length < 3) return ['Gib deinem Inserat einen Titel (mindestens 3 Zeichen).', form.title];
+    if (step === 2 && !(draft.price >= 1 && draft.price <= 500)) return ['Der Preis muss zwischen 1 und 500 € liegen.', form.price];
+    if (step === 3 && !draft.owner) return ['Gib einen Spitznamen an.', form.owner];
+    if (step === 3 && !form.ok.checked) return ['Bitte bestätige, dass das nur ein Test ist.', form.ok];
+    return null;
+  }
+
+  function goStep(n) {
+    for (let s = 1; s < n; s++) {
+      const err = validate(s);
+      if (err) { n = s; showErr(err); break; }
+    }
+    draft.step = n;
+    form.querySelectorAll('.step').forEach((f) => { f.hidden = Number(f.dataset.step) !== n; });
+    $('stepNav').querySelectorAll('li').forEach((li, idx) => {
+      li.className = idx + 1 < n ? 'done' : (idx + 1 === n ? 'current' : '');
+      li.querySelector('button').setAttribute('aria-current', idx + 1 === n ? 'step' : 'false');
+    });
+    $('back').hidden = n === 1;
+    $('next').hidden = n === 3;
+    $('publish').hidden = n !== 3;
+  }
+
+  function showErr(err) {
+    $('formError').textContent = err[0];
+    err[1].focus();
+    err[1].classList.add('shake');
+    setTimeout(() => err[1].classList.remove('shake'), 400);
+  }
+
+  $('next').addEventListener('click', () => {
+    const err = validate(draft.step);
+    if (err) return showErr(err);
+    $('formError').textContent = '';
+    goStep(draft.step + 1);
+    form.querySelector('.step:not([hidden]) input, .step:not([hidden]) textarea')?.focus({ preventScroll: true });
+  });
+  $('back').addEventListener('click', () => { $('formError').textContent = ''; goStep(draft.step - 1); });
+  $('stepNav').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-go]');
+    if (!b) return;
+    $('formError').textContent = '';
+    goStep(Number(b.dataset.go));
+  });
+
+  form.addEventListener('input', () => { $('formError').textContent = ''; renderPreview(); });
+  form.addEventListener('change', renderPreview);
+  form.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type !== 'checkbox' && draft.step < 3) { e.preventDefault(); $('next').click(); }
+  });
+
+  function bumpPrice(d) {
+    const v = Math.min(500, Math.max(1, (Math.round(Number(form.price.value)) || 0) + d));
+    form.price.value = v;
+    renderPreview();
+  }
+  $('priceDown').addEventListener('click', () => bumpPrice(-1));
+  $('priceUp').addEventListener('click', () => bumpPrice(1));
+
+  // Foto: wird im Browser verkleinert (4:3, max. 640 px) und nur lokal gespeichert
+  function loadPhoto(file) {
+    if (!file || !/^image\//.test(file.type)) { toast('Bitte wähle ein Bild aus.'); return; }
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const W = 640, H = 480;
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const sc = Math.max(W / img.width, H / img.height);
+      const w = img.width * sc, h = img.height * sc;
+      c.getContext('2d').drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+      URL.revokeObjectURL(url);
+      draft.photo = c.toDataURL('image/jpeg', 0.75);
+      showPhoto();
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); toast('Dieses Bild konnte nicht geladen werden.'); };
+    img.src = url;
+  }
+  function showPhoto() {
+    const has = okPhoto(draft.photo);
+    $('photoPrev').hidden = !has;
+    $('dropEmpty').hidden = has;
+    $('photoRemove').hidden = !has;
+    $('drop').classList.toggle('has', has);
+    if (has) $('photoPrev').src = draft.photo; else $('photoPrev').removeAttribute('src');
+    renderPreview();
+  }
+  $('photoInput').addEventListener('change', (e) => { loadPhoto(e.target.files[0]); e.target.value = ''; });
+  $('photoRemove').addEventListener('click', () => { draft.photo = ''; showPhoto(); });
+  ['dragenter', 'dragover'].forEach((ev) => $('drop').addEventListener(ev, (e) => { e.preventDefault(); $('drop').classList.add('over'); }));
+  ['dragleave', 'drop'].forEach((ev) => $('drop').addEventListener(ev, (e) => { e.preventDefault(); $('drop').classList.remove('over'); }));
+  $('drop').addEventListener('drop', (e) => loadPhoto(e.dataTransfer.files[0]));
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    for (const s of [1, 2, 3]) {
+      const err = validate(s);
+      if (err) { goStep(s); return showErr(err); }
+    }
+    const item = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      title: draft.title.slice(0, 60),
+      cat: draft.cat,
+      cond: CONDS.includes(draft.cond) ? draft.cond : '',
+      town: townById(draft.town) ? draft.town : TOWNS[0].id,
+      price: draft.price,
+      deposit: Math.min(2000, draft.deposit),
+      owner: draft.owner.slice(0, 24),
+      desc: draft.desc.slice(0, 300),
+      photo: okPhoto(draft.photo) ? draft.photo : ''
+    };
+    mine.unshift(item);
+    if (mine.length > 12) mine = mine.slice(0, 12);
+    saveMine();
+    if (!storageOk && item.photo) { item.photo = ''; saveMine(); toast('Speicher voll: Dein Inserat wurde ohne Foto gespeichert.'); }
+
+    lastPublished = item.id;
+    form.hidden = true;
+    $('stepNav').hidden = true;
+    $('success').hidden = false;
+    renderMine();
+    refresh();
+  });
+
+  $('showOnMap').addEventListener('click', () => {
+    state.cat = 'alle'; state.filter = 'alle';
+    refresh();
+    $('karte').scrollIntoView({ behavior: 'smooth' });
+    if (lastPublished) setTimeout(() => selectItem('m-' + lastPublished), 350);
+  });
+  $('another').addEventListener('click', () => {
+    form.reset();
+    form.price.value = 10;
+    draft.photo = '';
+    form.hidden = false;
+    $('stepNav').hidden = false;
+    $('success').hidden = true;
+    showPhoto();
+    goStep(1);
+    form.title.focus();
+  });
 
   function renderMine() {
     if (!mine.length) { $('mine').innerHTML = ''; return; }
-    $('mine').innerHTML = '<div class="mine-list"><h3>Deine Testinserate</h3>' +
+    $('mine').innerHTML = '<div class="mine-list"><span class="side-label">Deine Testinserate (' + mine.length + ')</span>' +
       mine.map((i) =>
-        '<div class="mine-row"><span>' + esc(i.title) + ' · ' + esc(townById(i.town).name) + ' · ' + Number(i.price) + ' €/Tag</span>' +
-        '<button type="button" data-del="' + esc(i.id) + '" aria-label="' + esc(i.title) + ' löschen">Löschen</button></div>'
+        '<div class="mine-row">' + photoBlock(i, 'mine-img') +
+        '<span class="mine-txt"><b>' + esc(i.title) + '</b><small>' + esc(townById(i.town).name) + ' · ' + Number(i.price) + ' €/Tag</small></span>' +
+        '<button type="button" class="mini" data-view="' + esc(i.id) + '">Ansehen</button>' +
+        '<button type="button" class="mini danger" data-del="' + esc(i.id) + '" aria-label="' + esc(i.title) + ' löschen">Löschen</button></div>'
       ).join('') +
       (mine.length > 1 ? '<button type="button" class="linkish" data-del="all">Alle löschen</button>' : '') +
       '</div>';
   }
 
-  $('insertForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const f = e.target;
-    const title = f.title.value.trim();
-    const owner = f.owner.value.trim();
-    const price = Math.round(Number(f.price.value));
-    const err = $('formError');
-
-    if (!title) { err.textContent = 'Bitte gib an, was du verleihst.'; f.title.focus(); return; }
-    if (!(price >= 1 && price <= 500)) { err.textContent = 'Bitte gib einen Preis zwischen 1 und 500 € an.'; f.price.focus(); return; }
-    if (!owner) { err.textContent = 'Bitte gib einen Spitznamen an.'; f.owner.focus(); return; }
-    if (!f.ok.checked) { err.textContent = 'Bitte bestätige, dass das nur ein Test ist.'; f.ok.focus(); return; }
-    err.textContent = '';
-
-    const item = {
-      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      title: title.slice(0, 70),
-      cat: ICONS[f.cat.value] && f.cat.value !== 'alle' ? f.cat.value : 'ski',
-      town: townById(f.town.value) ? f.town.value : TOWNS[0].id,
-      price: price,
-      owner: owner.slice(0, 30),
-      desc: f.desc.value.trim().slice(0, 300)
-    };
-    mine.unshift(item);
-    if (mine.length > 20) mine = mine.slice(0, 20);
-    saveMine();
-
-    state.cat = 'alle';
-    state.filter = 'alle';
-    f.reset();
-    renderMine();
-    refresh();
-    $('karte').scrollIntoView({ behavior: 'smooth' });
-    selectItem('m-' + item.id);
-    toast(storageOk
-      ? 'Dein Testinserat ist auf der Karte – nur in deinem Browser sichtbar.'
-      : 'Testinserat angezeigt. Dein Browser erlaubt kein Speichern, nach dem Neuladen ist es weg.');
-  });
-
   $('mine').addEventListener('click', (e) => {
+    const v = e.target.closest('[data-view]');
+    if (v) {
+      state.cat = 'alle'; state.filter = 'alle'; refresh();
+      $('karte').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => selectItem('m-' + v.dataset.view), 350);
+      return;
+    }
     const b = e.target.closest('[data-del]');
     if (!b) return;
     mine = b.dataset.del === 'all' ? [] : mine.filter((i) => i.id !== b.dataset.del);
     saveMine();
-    if (state.selected && state.selected.startsWith('m-')) state.selected = null;
+    if (state.selected && state.selected.startsWith('m-') && !mine.some((i) => 'm-' + i.id === state.selected)) state.selected = null;
     renderMine();
     refresh();
     toast('Testinserat gelöscht.');
   });
+
+  goStep(1);
+  renderPreview();
 
   renderMine();
   refresh();

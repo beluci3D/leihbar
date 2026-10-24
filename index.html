@@ -149,46 +149,117 @@
 </section>
 
 <section id="inserieren" class="wrap section">
-  <div class="insert">
-    <div class="insert-intro">
-      <h2>Testinserat erstellen</h2>
-      <p>Probier aus, wie Verleihen funktionieren würde. Dein Inserat erscheint sofort in der Liste und auf der Karte.</p>
-      <div class="infobox">
-        <b>Wichtig:</b> Dein Testinserat wird nur in <i>deinem</i> Browser gespeichert (localStorage). Es wird nicht an uns oder andere geschickt und ist für niemand anderen sichtbar. Bitte gib keine echten persönlichen Daten wie vollen Namen, Adresse oder Telefonnummer ein.
+  <div class="ins-head">
+    <h2>Testinserat erstellen</h2>
+    <p class="muted">In drei Schritten zum eigenen Inserat. Rechts siehst du live, wie es aussieht.</p>
+  </div>
+
+  <div class="wizard">
+    <div class="wiz-main">
+      <ol class="stepnav" id="stepNav">
+        <li><button type="button" data-go="1"><span>1</span>Was</button></li>
+        <li><button type="button" data-go="2"><span>2</span>Wo &amp; Preis</button></li>
+        <li><button type="button" data-go="3"><span>3</span>Veröffentlichen</button></li>
+      </ol>
+
+      <form id="insertForm" novalidate>
+        <fieldset class="step" data-step="1">
+          <legend>Was verleihst du?</legend>
+          <div class="field">
+            <span class="field-label">Kategorie</span>
+            <div class="pick pick-cats" id="catPick" role="radiogroup" aria-label="Kategorie"></div>
+          </div>
+          <label class="field">
+            <span class="field-label">Titel <span class="count" id="titleCount">0/60</span></span>
+            <input name="title" type="text" maxlength="60" placeholder="z. B. Snowboard 150 cm mit Bindung" autocomplete="off">
+          </label>
+          <div class="field">
+            <span class="field-label">Foto <span class="opt">optional</span></span>
+            <label class="drop" id="drop">
+              <input type="file" accept="image/*" id="photoInput" class="sr-only">
+              <span class="drop-empty" id="dropEmpty">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="3"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5 L9.5 3 H14.5 L16 5"/></svg>
+                <b>Foto hinzufügen</b>
+                <span>Klicken oder hierher ziehen</span>
+              </span>
+              <img id="photoPrev" alt="Vorschau deines Fotos" hidden>
+            </label>
+            <button type="button" class="linkish" id="photoRemove" hidden>Foto entfernen</button>
+          </div>
+          <div class="field">
+            <span class="field-label">Zustand</span>
+            <div class="pick pick-chips" id="condPick" role="radiogroup" aria-label="Zustand"></div>
+          </div>
+        </fieldset>
+
+        <fieldset class="step" data-step="2" hidden>
+          <legend>Wo und zu welchem Preis?</legend>
+          <div class="field">
+            <span class="field-label">Ort in Talbergland</span>
+            <div class="pick pick-towns" id="townPick" role="radiogroup" aria-label="Ort"></div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <span class="field-label">Preis pro Tag</span>
+              <div class="stepper">
+                <button type="button" id="priceDown" aria-label="Preis verringern">−</button>
+                <input name="price" type="number" min="1" max="500" step="1" value="10" inputmode="numeric" aria-label="Preis pro Tag in Euro">
+                <span class="unit">€</span>
+                <button type="button" id="priceUp" aria-label="Preis erhöhen">+</button>
+              </div>
+              <span class="hint" id="priceHint"></span>
+            </div>
+            <label class="field">
+              <span class="field-label">Kaution <span class="opt">optional</span></span>
+              <div class="with-unit"><input name="deposit" type="number" min="0" max="2000" step="10" placeholder="0" inputmode="numeric"><span class="unit">€</span></div>
+            </label>
+          </div>
+          <label class="field">
+            <span class="field-label">Beschreibung <span class="opt">optional</span> <span class="count" id="descCount">0/300</span></span>
+            <textarea name="desc" rows="4" maxlength="300" placeholder="Größe, Zustand, was dabei ist, wann man abholen kann …"></textarea>
+          </label>
+        </fieldset>
+
+        <fieldset class="step" data-step="3" hidden>
+          <legend>Fast fertig</legend>
+          <label class="field">
+            <span class="field-label">Dein Spitzname</span>
+            <input name="owner" type="text" maxlength="24" placeholder="z. B. Max" autocomplete="off">
+          </label>
+          <div class="infobox">
+            <b>Nur ein Test:</b> Dein Inserat und Foto werden nur in <i>deinem</i> Browser gespeichert. Nichts wird hochgeladen oder an andere geschickt. Bitte keine echten persönlichen Daten eingeben.
+          </div>
+          <label class="check">
+            <input name="ok" type="checkbox">
+            <span>Ich weiß, dass das nur ein Test ist und nichts wirklich verliehen wird.</span>
+          </label>
+        </fieldset>
+
+        <p class="form-error" id="formError" role="alert"></p>
+
+        <div class="wiz-actions">
+          <button type="button" class="btn btn-ghost" id="back">Zurück</button>
+          <button type="button" class="btn btn-dark" id="next">Weiter</button>
+          <button type="submit" class="btn btn-accent" id="publish" hidden>Testinserat veröffentlichen</button>
+        </div>
+      </form>
+
+      <div class="success" id="success" hidden>
+        <div class="success-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5 L10 17.5 L19 7.5"/></svg></div>
+        <h3>Dein Testinserat ist online!</h3>
+        <p>Es steht jetzt auf der Karte von Talbergland, sichtbar nur in deinem Browser.</p>
+        <div class="success-actions">
+          <button type="button" class="btn btn-accent" id="showOnMap">Auf der Karte ansehen</button>
+          <button type="button" class="btn btn-ghost" id="another">Noch eins erstellen</button>
+        </div>
       </div>
-      <div id="mine"></div>
     </div>
 
-    <form class="form" id="insertForm" novalidate>
-      <label>Was verleihst du?
-        <input name="title" type="text" required maxlength="70" placeholder="z. B. Snowboard 150 cm">
-      </label>
-      <div class="row">
-        <label>Kategorie
-          <select name="cat" id="catSelect" required></select>
-        </label>
-        <label>Preis pro Tag (€)
-          <input name="price" type="number" required min="1" max="500" step="1" placeholder="15">
-        </label>
-      </div>
-      <div class="row">
-        <label>Spitzname
-          <input name="owner" type="text" required maxlength="30" placeholder="z. B. Max">
-        </label>
-        <label>Ort in Talbergland
-          <select name="town" id="townSelect" required></select>
-        </label>
-      </div>
-      <label>Beschreibung (optional)
-        <textarea name="desc" rows="3" maxlength="300" placeholder="Zustand, Größe, Abholung …"></textarea>
-      </label>
-      <label class="check">
-        <input name="ok" type="checkbox" required>
-        <span>Ich weiß, dass das nur ein Test ist und nichts wirklich verliehen wird.</span>
-      </label>
-      <p class="form-error" id="formError" role="alert"></p>
-      <button type="submit" class="btn btn-accent">Testinserat veröffentlichen</button>
-    </form>
+    <aside class="wiz-side">
+      <span class="side-label">Vorschau</span>
+      <div id="preview"></div>
+      <div id="mine"></div>
+    </aside>
   </div>
 </section>
 
